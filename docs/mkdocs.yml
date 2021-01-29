@@ -1,5 +1,5 @@
 site_name: The Most Predictable League
-site_description: How predictable football really is? (Updating this post: https://labtwentyone.tumblr.com/post/147894684062/why-did-we-stop-loving-football)
+site_description: How predictable football really is?
 site_favicon: favicon.ico
 repo_url: https://github.com/jartigag/football-entropy
 edit_uri: edit/master/docs/docs
@@ -7,5 +7,5 @@ copyright: Project maintained by <a target=_blanks href="https://github.com/jart
 theme: cinder
 extra_css:
   - css/extra.css
-pages:
+nav:
   - Home: index.md

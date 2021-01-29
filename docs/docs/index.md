@@ -1,26 +1,14 @@
-# Welcome to MkDocs
+# The Most Predictable League
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+How predictable football really is?
 
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+(Updating this post: [https://labtwentyone.tumblr.com/post/147894684062/why-did-we-stop-loving-football](https://labtwentyone.tumblr.com/post/147894684062/why-did-we-stop-loving-football))
 
 ## Virtual environment
 
 * `make create_environment` - Create virtual environment
 * `source venv/bin/activate` - Activate virtual environment
-* `ipython kernel install --user --name=venv` - Install virtual environment as the kernel of jupyter notebooks
+* `ipython kernel install --user --name=venv` - Install virtual environment as the kernel of Jupyter Notebooks
 
 ## Tricks from "Data Science if Software: Developer #lifehacks for the Jupyter Data Scientist"
 
@@ -40,3 +28,21 @@ cd notebooks
 touch .ipynb_saveprogress
 # so now, when a .ipynb is edited, a directory is created with plain .py and .html copies
 ```
+
+# Welcome to MkDocs
+
+For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+
+## Commands
+
+* `mkdocs new [dir-name]` - Create a new project.
+* `mkdocs serve` - Start the live-reloading docs server.
+* `mkdocs build` - Build the documentation site.
+* `mkdocs -h` - Print help message and exit.
+
+## Project layout
+
+    mkdocs.yml    # The configuration file.
+    docs/
+        index.md  # The documentation homepage.
+        ...       # Other markdown pages, images and other files.
