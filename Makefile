@@ -1,5 +1,3 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
-
 #################################################################################
 # GLOBALS                                                                       #
 #################################################################################
@@ -20,22 +18,38 @@ endif
 # COMMANDS                                                                      #
 #################################################################################
 
-## Install Python Dependencies
-requirements:
-	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
-
-## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
-
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
+## Set up python interpreter environment
+create_environment:
+ifeq (True,$(HAS_CONDA))
+		@echo ">>> Detected conda, creating conda environment."
+ifeq (3,$(findstring 3,$(PYTHON_INTERPRETER)))
+	conda create --name $(PROJECT_NAME) python=3
+else
+	conda create --name $(PROJECT_NAME) python=2.7
+endif
+		@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
+else
+	$(PYTHON_INTERPRETER) -m pip install -q virtualenv virtualenvwrapper
+	@bash -c "virtualenv venv --python=$(PYTHON_INTERPRETER);"
+	@echo ">>> New virtualenv created. Activate with:\nsource venv/bin/activate"
+endif
+
+## Install Python Dependencies
+install_requirements:
+	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
+	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+
+## Make Dataset
+make_data: #install_requirements
+	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
+
 ## Lint using flake8
-lint:
+run_linting:
 	flake8 src
 
 ## Upload Data to S3
@@ -52,22 +66,6 @@ ifeq (default,$(PROFILE))
 	aws s3 sync s3://$(BUCKET)/data/ data/
 else
 	aws s3 sync s3://$(BUCKET)/data/ data/ --profile $(PROFILE)
-endif
-
-## Set up python interpreter environment
-create_environment:
-ifeq (True,$(HAS_CONDA))
-		@echo ">>> Detected conda, creating conda environment."
-ifeq (3,$(findstring 3,$(PYTHON_INTERPRETER)))
-	conda create --name $(PROJECT_NAME) python=3
-else
-	conda create --name $(PROJECT_NAME) python=2.7
-endif
-		@echo ">>> New conda env created. Activate with:\nsource activate $(PROJECT_NAME)"
-else
-	$(PYTHON_INTERPRETER) -m pip install -q virtualenv virtualenvwrapper
-	@bash -c "virtualenv venv --python=$(PYTHON_INTERPRETER);"
-	@echo ">>> New virtualenv created. Activate with:\nsource venv/bin/activate"
 endif
 
 #################################################################################
