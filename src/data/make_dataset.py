@@ -8,6 +8,8 @@ from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 import sqlite3
 import pandas as pd
+from src.features.build_features import process
+from src.visualization.visualize import make_visualizations
 
 
 @click.command()
@@ -19,22 +21,36 @@ def main(input_filepath, output_filepath):
     """
     logger = logging.getLogger(__name__)
 
-    logger.info('making final data set from raw data')
+    logger.info('making final data set from raw data..')
 
     with sqlite3.connect(f"{input_filepath}/database.sqlite") as con:
         # (downloaded from https://www.kaggle.com/hugomathien/soccer, updated on 2016)
 
-        db_df = pd.read_sql_query("SELECT * FROM Country", con)
-        db_df.to_csv(f"{output_filepath}/countries.csv", index=False)
+        countries = pd.read_sql_query("SELECT * FROM Country", con)
+        countries.to_csv(f"{output_filepath}/countries.csv", index=False)
 
-        db_df = pd.read_sql_query("SELECT * FROM Match", con)
-        db_df.to_csv(f"{output_filepath}/matches.csv", index=False)
+        matches = pd.read_sql_query("SELECT * FROM Match", con)
+        matches.to_csv(f"{output_filepath}/matches-2008-2016.csv", index=False)
 
-        db_df = pd.read_sql_query("SELECT * FROM League", con)
-        db_df.to_csv(f"{output_filepath}/leagues.csv", index=False)
+        teams = pd.read_sql_query("SELECT team_api_id, team_long_name FROM Team", con)
+        teams.to_csv(f"{output_filepath}/teams.csv", index=False)
 
-        db_df = pd.read_sql_query("SELECT team_api_id, team_long_name FROM Team", con)
-        db_df.to_csv(f"{output_filepath}/teams.csv", index=False)
+        leagues = pd.read_sql_query("SELECT * FROM League", con)
+        leagues.to_csv(f"{output_filepath}/leagues.csv", index=False)
+
+    # matches from 2016/17 to 2019/20 downloaded from https://www.football-data.co.uk/
+
+    #TODO: merge all raw data from 2008/2009-2015/2016 to 2019/2020 into matches.csv
+
+    #./src/features/build_features.py
+    logger = logging.getLogger(".".join([process.__module__,process.__name__]))
+    logger.info('building features..')
+    entropy_means, matches = process(matches, countries, leagues)
+
+    #./src/visualization/visualize.py
+    logger = logging.getLogger(".".join([make_visualizations.__module__,make_visualizations.__name__]))
+    logger.info('making visualizations..')
+    make_visualizations(matches, entropy_means, teams, leagues)
 
     logger.info('final data set done.')
 

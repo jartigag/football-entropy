@@ -1,6 +1,11 @@
+*swp
+
+data/raw/*.csv
 data/raw/database.sqlite
 data/processed/*.csv
 
 notebooks/.ipynb_checkpoints/
 src.egg-info/
 venv/
+
+*.R*
