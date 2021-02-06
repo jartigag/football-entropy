@@ -1,7 +1,12 @@
 The Most Predictable League
 ==============================
 
-How predictable football really is? (Updating this post: https://labtwentyone.tumblr.com/post/147894684062/why-did-we-stop-loving-football)
+This work tries to answer the next question: *How predictable football really is?*
+
+I found this post: https://labtwentyone.tumblr.com/post/147894684062/why-did-we-stop-loving-football and I'm just updating the data and restructuring the project.
+
+---
+(forked from [https://github.com/yonilev/football-entropy](https://github.com/yonilev/football-entropy))
 
 Project Organization
 ------------
