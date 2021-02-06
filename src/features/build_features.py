@@ -22,8 +22,7 @@ def process(matches, countries, leagues):
 
     #select relevant fields
     matches = matches[matches.league_id.isin(leagues.id)]
-    matches = matches[['id', 'country_id' ,'league_id', 'season', 'stage', 'date','match_api_id', 'home_team_api_id', 'away_team_api_id',
-        'B365H', 'B365D' ,'B365A']]
+    matches = matches[['league_id', 'season', 'date', 'home_team_api_id', 'away_team_api_id', 'B365H', 'B365D' ,'B365A']]
     matches['League'] = matches.league_id.map(leagues.set_index('id')['name_y'])
 
     #compute match entropy

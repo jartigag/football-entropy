@@ -56,12 +56,13 @@ def make_visualizations(matches, entropy_means, teams, leagues):
 
     #create ticks and labels
     ax = plt.gca()
-    plt.xlim((-0.5,7.5))
-    plt.xticks(np.arange(0,8,1),rotation=50)
+    plt.xlim((-0.5,11.5))
+    plt.xticks(np.arange(0,12,1),rotation=50)
+    #                      ^^ number of seasons
 
     #create grid
     ax.set_xticklabels(entropy_means.index,fontsize=12)
-    for i in range(7):
+    for i in range(11):
         ax.axvline(x=0.5+i,ls='--',c='w')
     ax.yaxis.grid(False)
     ax.xaxis.grid(False)

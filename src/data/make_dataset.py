@@ -29,8 +29,8 @@ def main(input_filepath, output_filepath):
         countries = pd.read_sql_query("SELECT * FROM Country", con)
         countries.to_csv(f"{output_filepath}/countries.csv", index=False)
 
-        matches = pd.read_sql_query("SELECT * FROM Match", con)
-        matches.to_csv(f"{output_filepath}/matches-2008-2016.csv", index=False)
+        matches = pd.read_sql_query("SELECT league_id, season, date, home_team_api_id, away_team_api_id, B365H, B365D, B365A FROM Match", con)
+        #matches.to_csv(f"{output_filepath}/matches-2008-2016.csv", index=False)
 
         teams = pd.read_sql_query("SELECT team_api_id, team_long_name FROM Team", con)
         teams.to_csv(f"{output_filepath}/teams.csv", index=False)
@@ -40,7 +40,17 @@ def main(input_filepath, output_filepath):
 
     # matches from 2016/17 to 2019/20 downloaded from https://www.football-data.co.uk/
 
-    #TODO: merge all raw data from 2008/2009-2015/2016 to 2019/2020 into matches.csv
+    league_id = {'D1-bundesliga_1': 7809, 'E0-premier_league': 1729, 'F1-le_championnat': 4769, 'I1-serie_a': 10257, 'SP1-la_liga_primera_div': 21518}
+    for league in ['D1-bundesliga_1', 'E0-premier_league', 'F1-le_championnat', 'I1-serie_a', 'SP1-la_liga_primera_div']:
+        for season in ['2016-2017', '2017-2018', '2018-2019', '2019-2020']:
+            new_matches = pd.read_csv(f"{input_filepath}/{league}-{season}.csv", usecols=['Date','HomeTeam','AwayTeam', 'B365H', 'B365D' ,'B365A'], parse_dates=['Date'])
+            new_matches['league_id'] = league_id[league]
+            new_matches['season'] = season
+            new_matches.rename(columns={'Date':'date','HomeTeam':'home_team_api_id','AwayTeam':'away_team_api_id'}, inplace=True)
+            #TODO: replace the team name by its api_id, in order to plot teams_pred.png correctly
+            matches = pd.concat([matches, new_matches])
+
+    matches.to_csv(f"{output_filepath}/matches.csv", index=False)
 
     #./src/features/build_features.py
     logger = logging.getLogger(".".join([process.__module__,process.__name__]))
