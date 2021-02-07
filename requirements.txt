@@ -4,6 +4,11 @@ pandas
 scipy
 matplotlib
 
+# notebooks
+ipython
+ipykernel
+nbdime
+
 # external requirements
 click
 mkdocs

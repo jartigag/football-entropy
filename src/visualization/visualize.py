@@ -11,9 +11,10 @@ def make_visualizations(matches, entropy_means, teams):
 
     ## -- Leagues Predictability -- ##
 
+    num_seasons = len(matches.season.unique())
     ax = entropy_means.plot(figsize=(12,8),marker='o') #plot graph
     plt.title('Leagues Predictability', fontsize=16)   #set title
-    plt.xticks(rotation=50)                            #set ticks rotation
+    plt.xticks(np.arange(0, num_seasons, 1), matches.season.unique(), rotation=50) #set ticks frequency, labels and rotation
     colors = [x.get_color() for x in ax.get_lines()]   #keep colors for next graph
     colors_mapping = dict(zip(matches.League.unique(),colors))
     ax.set_xlabel('')                                  #remove x label
@@ -54,7 +55,6 @@ def make_visualizations(matches, entropy_means, teams):
     plt.title('Teams Predictability', fontsize=16)
 
     #create ticks and labels
-    num_seasons = len(matches.season.unique())
     ax = plt.gca()
     plt.xlim((-0.5,num_seasons-0.5))
     plt.xticks(np.arange(0,num_seasons,1),rotation=50)

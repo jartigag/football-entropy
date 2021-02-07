@@ -20,6 +20,9 @@ countries.head()
 matches.head()
 
 
+matches.tail()
+
+
 leagues.head()
 
 
@@ -34,7 +37,8 @@ leagues = countries.merge(leagues,on='id',suffixes=('', '_y'))
 
 #select relevant fields
 matches = matches[matches.league_id.isin(leagues.id)]
-matches = matches[['id', 'country_id' ,'league_id', 'season', 'stage', 'date','match_api_id', 'home_team_api_id', 'away_team_api_id','B365H', 'B365D' ,'B365A']]
+matches = matches[['league_id', 'season', 'date', 'home_team_api_id', 'away_team_api_id', 'B365H', 'B365D' ,'B365A']]
+matches['League'] = matches.league_id.map(leagues.set_index('id')['name_y'])
 matches.head()
 
 
@@ -55,10 +59,9 @@ matches.head()
 
 
 #compute mean entropy for every league in every season
-entropy_means = matches.groupby(['season','league_id']).entropy.mean()
-entropy_means = entropy_means.reset_index().pivot(index='season', columns='league_id', values='entropy')
-entropy_means.columns = [leagues[leagues.id==x].name.values[0] for x in entropy_means.columns]
-entropy_means.head(10)
+entropy_means = matches.groupby(['season','League']).entropy.mean()
+entropy_means = entropy_means.reset_index().pivot(index='season', columns='League', values='entropy')
+entropy_means.head(12)
 
 
 #plot graph
@@ -67,8 +70,10 @@ ax = entropy_means.plot(figsize=(12,8),marker='o')
 #set title
 plt.title('Leagues Predictability', fontsize=16)
 
-#set ticks roatation
-plt.xticks(rotation=50)
+num_seasons = len(matches.season.unique())
+
+#set ticks frequency, labels and rotation
+plt.xticks(np.arange(0, num_seasons, 1), matches.season.unique(), rotation=50)
 
 #keep colors for next graph
 colors = [x.get_color() for x in ax.get_lines()]
@@ -81,14 +86,14 @@ ax.set_xlabel('')
 plt.legend(loc='lower left')
 
 #add arrows
-ax.annotate('', xytext=(7.5, 1),xy=(7.5, 1.029),
+ax.annotate('', xytext=(11.7, 1),xy=(11.7, 1.029),
             arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
 
-ax.annotate('', xytext=(7.5, 0.96),xy=(7.5, 0.931),
+ax.annotate('', xytext=(11.7, 0.96),xy=(11.7, 0.931),
             arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
 
-ax.annotate('less predictable', xy=(7.6, 0.99), annotation_clip=False,fontsize=14,rotation='vertical')
-ax.annotate('more predictable', xy=(7.6, 0.952), annotation_clip=False,fontsize=14,rotation='vertical')
+ax.annotate('less predictable', xy=(11.8, 0.99), annotation_clip=False,fontsize=14,rotation='vertical')
+ax.annotate('more predictable', xy=(11.8, 0.952), annotation_clip=False,fontsize=14,rotation='vertical')
 
 plt.savefig('../reports/figures/leagues_pred.png', bbox_inches='tight',dpi=600)
 
@@ -119,12 +124,12 @@ plt.title('Teams Predictability', fontsize=16)
 
 #create ticks and labels
 ax = plt.gca()
-plt.xlim((-0.5,7.5))
-plt.xticks(np.arange(0,8,1),rotation=50)
+plt.xlim((-0.5,num_seasons-0.5))
+plt.xticks(np.arange(0,num_seasons,1),rotation=50)
 
 #create grid
 ax.set_xticklabels(entropy_means.index,fontsize=12)
-for i in range(7):
+for i in range(num_seasons-1):
     ax.axvline(x=0.5+i,ls='--',c='w')
 ax.yaxis.grid(False)
 ax.xaxis.grid(False)
@@ -132,20 +137,22 @@ ax.xaxis.grid(False)
 #create legend
 circles = []
 labels = []
-for league_id,name in zip(leagues.id,leagues.name):
+leagues = matches.groupby(['league_id','League']).count().reset_index()
+for league_id,name in zip(leagues.league_id,leagues.League):
     labels.append(name)
     circles.append(Line2D([0], [0], linestyle="none", marker="o", markersize=8, markerfacecolor=colors_mapping[league_id]))
 plt.legend(circles, labels, numpoints=3, loc=(0.005,0.02))
 
+
 #add arrows
-ax.annotate('', xytext=(7.65, 0.93),xy=(7.65, 1.06),
+ax.annotate('', xytext=(11.65, 0.93),xy=(11.65, 1.07),
             arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
 
-ax.annotate('', xytext=(7.65, 0.77),xy=(7.65, 0.63),
+ax.annotate('', xytext=(11.65, 0.77),xy=(11.65, 0.61),
             arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
 
-ax.annotate('less predictable', xy=(7.75, 0.89), annotation_clip=False,fontsize=14,rotation='vertical')
-ax.annotate('more predictable', xy=(7.75, 0.68), annotation_clip=False,fontsize=14,rotation='vertical')
+ax.annotate('less predictable', xy=(11.75, 0.88), annotation_clip=False,fontsize=14,rotation='vertical')
+ax.annotate('more predictable', xy=(11.75, 0.73), annotation_clip=False,fontsize=14,rotation='vertical')
 
 #add labels
 ax.annotate('Barcelona', xy=(6.55, 0.634),fontsize=9)
