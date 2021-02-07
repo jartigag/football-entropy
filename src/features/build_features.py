@@ -30,9 +30,11 @@ def process(matches, countries, leagues):
 
     #compute mean entropy for every league in every season
     entropy_means = matches.groupby(['season','League']).entropy.mean()
+
+    #print to csv
     entropy_means = entropy_means.reset_index().pivot(index='season', columns='League', values='entropy')
     entropy_means.to_csv('data/processed/entropy_means.csv')
-    matches.to_csv('data/processed/matches_with_entropy.csv')
+    matches.to_csv('data/processed/matches_with_entropy.csv', index=False)
 
     return entropy_means, matches
 

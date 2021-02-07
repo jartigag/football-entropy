@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 
-def make_visualizations(matches, entropy_means, teams, leagues):
+def make_visualizations(matches, entropy_means, teams):
 
     ## -- Leagues Predictability -- ##
 
@@ -19,12 +19,12 @@ def make_visualizations(matches, entropy_means, teams, leagues):
     ax.set_xlabel('')                                  #remove x label
     plt.legend(loc='lower left')                       #locate legend
     #add arrows:
-    ax.annotate('', xytext=(7.5, 1),xy=(7.5, 1.029),
+    ax.annotate('', xytext=(11.7, 1),xy=(11.7, 1.029),
                 arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
-    ax.annotate('', xytext=(7.5, 0.96),xy=(7.5, 0.931),
+    ax.annotate('', xytext=(11.7, 0.96),xy=(11.7, 0.931),
                 arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
-    ax.annotate('less predictable', xy=(7.6, 0.99), annotation_clip=False,fontsize=14,rotation='vertical')
-    ax.annotate('more predictable', xy=(7.6, 0.952), annotation_clip=False,fontsize=14,rotation='vertical')
+    ax.annotate('less predictable', xy=(11.8, 0.99), annotation_clip=False,fontsize=14,rotation='vertical')
+    ax.annotate('more predictable', xy=(11.8, 0.952), annotation_clip=False,fontsize=14,rotation='vertical')
 
     plt.savefig('reports/figures/leagues_pred.png', bbox_inches='tight',dpi=600)
 
@@ -41,7 +41,6 @@ def make_visualizations(matches, entropy_means, teams, leagues):
     for season,season_df in matches.groupby('season'):
         i+=1
         for team,name in zip(teams.team_api_id,teams.team_long_name):
-            #WIP:
             team_df = season_df[(season_df.home_team_api_id==team)|(season_df.away_team_api_id==team)]
             team_entropy = team_df.entropy.mean()
             if team_entropy>0:
@@ -55,14 +54,14 @@ def make_visualizations(matches, entropy_means, teams, leagues):
     plt.title('Teams Predictability', fontsize=16)
 
     #create ticks and labels
+    num_seasons = len(matches.season.unique())
     ax = plt.gca()
-    plt.xlim((-0.5,11.5))
-    plt.xticks(np.arange(0,12,1),rotation=50)
-    #                      ^^ number of seasons
+    plt.xlim((-0.5,num_seasons-0.5))
+    plt.xticks(np.arange(0,num_seasons,1),rotation=50)
 
     #create grid
     ax.set_xticklabels(entropy_means.index,fontsize=12)
-    for i in range(11):
+    for i in range(num_seasons-1):
         ax.axvline(x=0.5+i,ls='--',c='w')
     ax.yaxis.grid(False)
     ax.xaxis.grid(False)
@@ -70,20 +69,19 @@ def make_visualizations(matches, entropy_means, teams, leagues):
     #create legend
     circles = []
     labels = []
-    #for league_id,name in zip(leagues.id,leagues.name):
-    #    labels.append(name)
-    #    circles.append(Line2D([0], [0], linestyle="none", marker="o", markersize=8, markerfacecolor=colors_mapping[league_id]))
-    #plt.legend(circles, labels, numpoints=3, loc=(0.005,0.02))
+    leagues = matches.groupby(['league_id','League']).count().reset_index()
+    for league_id,name in zip(leagues.league_id,leagues.League):
+        labels.append(name)
+        circles.append(Line2D([0], [0], linestyle="none", marker="o", markersize=8, markerfacecolor=colors_mapping[league_id]))
+    plt.legend(circles, labels, numpoints=3, loc=(0.005,0.02))
 
     #add arrows
-    ax.annotate('', xytext=(7.65, 0.93),xy=(7.65, 1.1),
+    ax.annotate('', xytext=(11.65, 0.93),xy=(11.65, 1.07),
                 arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
-
-    ax.annotate('', xytext=(7.65, 0.77),xy=(7.65, 0.6),
+    ax.annotate('', xytext=(11.65, 0.77),xy=(11.65, 0.61),
                 arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
-
-    ax.annotate('less predictable', xy=(7.75, 1.05), annotation_clip=False,fontsize=14,rotation='vertical')
-    ax.annotate('more predictable', xy=(7.75, 0.73), annotation_clip=False,fontsize=14,rotation='vertical')
+    ax.annotate('less predictable', xy=(11.75, 0.88), annotation_clip=False,fontsize=14,rotation='vertical')
+    ax.annotate('more predictable', xy=(11.75, 0.73), annotation_clip=False,fontsize=14,rotation='vertical')
 
     #add labels
     ax.annotate('Barcelona', xy=(6.55, 0.634),fontsize=9)
@@ -98,6 +96,7 @@ if __name__ == '__main__':
     matches = pd.read_csv('data/processed/matches_with_entropy.csv')
     entropy_means = pd.read_csv('data/processed/entropy_means.csv')
     teams = pd.read_csv('data/processed/teams.csv')
-    leagues = pd.read_csv('data/processed/leagues.csv')
+    #leagues = pd.read_csv('data/processed/leagues.csv')
+    #TODO: load so 'season' appears on x axis
 
-    make_visualizations(matches, entropy_means, teams, leagues)
+    make_visualizations(matches, entropy_means, teams)
