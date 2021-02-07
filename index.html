@@ -89,6 +89,10 @@
         <li class="first-level active"><a href="#the-most-predictable-league">The Most Predictable League</a></li>
             <li class="second-level"><a href="#results">Results</a></li>
                 
+            <li class="second-level"><a href="#methodology">Methodology</a></li>
+                
+            <li class="second-level"><a href="#data">Data</a></li>
+                
         <li class="first-level "><a href="#miscelaneous">Miscelaneous</a></li>
             <li class="second-level"><a href="#virtual-environment">Virtual environment</a></li>
                 
@@ -96,8 +100,8 @@
                 
             <li class="second-level"><a href="#welcome-to-mkdocs">Welcome to MkDocs</a></li>
                 
-                <li class="third-level"><a href="#mkdocs-commands">MkDocs Commands</a></li>
-                <li class="third-level"><a href="#project-layout">Project layout</a></li>
+                <li class="third-level"><a href="#mkdocs-commands">MkDocs commands</a></li>
+                <li class="third-level"><a href="#mkdocs-project-layout">MkDocs project layout</a></li>
     </ul>
 </div></div>
         <div class="col-md-9" role="main">
@@ -108,7 +112,17 @@
 and I'm just updating the data and restructuring it as a <a href="https://drivendata.github.io/cookiecutter-data-science">cookiecutter data science project</a>.</p>
 <h2 id="results">Results</h2>
 <p><img alt="" src="leagues_pred.png" /></p>
+<p>Until 2016/2017, the Spanish league has been the least competitive league out of the 5 leagues examined.
+This has changed lately, so now English, German, and Italian leagues seems to be less competitive than Spanish.
+The French league has almost always remained as the most even competition.</p>
 <p><img alt="" src="teams_pred.png" /></p>
+<h2 id="methodology">Methodology</h2>
+<p>The metric which measures effectively unpredictability as a proxy to competitiveness is <a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)"><strong>entropy</strong></a>.</p>
+<p>"In Information Theory, Entropy is a measurement for uncertainty for an event’s outcome. In our case, the event is a football match and there are three possible outcomes: a win for the first team, a win for the other team or a draw. If the three outcomes are equally probable, the uncertainty is maximal and so is the entropy (log(3)=1.584963). As the probability of a particular outcome will get closer to one - almost no uncertainty - the match entropy will approach zero."</p>
+<p>To get the probability for each team to win in a particular game during a specific season, <a href="https://github.com/jartigag/football-entropy/blob/master/src/features/build_features.py#L7">odds from B365 gambling agency</a> has been used.</p>
+<h2 id="data">Data</h2>
+<p>This <a href="https://www.kaggle.com/hugomathien/soccer">Kaggle's European Soccer database</a>, which spans across 8 years from 2008 to 2016 and includes many teams and matches statistics, has been used to examine the top 5 European leagues and determine which is the most competitive league.</p>
+<p>To complete the data until the most recently finished season, matches from 2016/17 to 2019/20 has been downloaded from <a href="https://www.football-data.co.uk">https://www.football-data.co.uk</a>.</p>
 <h1 id="miscelaneous">Miscelaneous</h1>
 <h2 id="virtual-environment">Virtual environment</h2>
 <ul>
@@ -131,14 +145,14 @@ touch .ipynb_saveprogress
 </code></pre>
 <h2 id="welcome-to-mkdocs">Welcome to MkDocs</h2>
 <p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h3 id="mkdocs-commands">MkDocs Commands</h3>
+<h3 id="mkdocs-commands">MkDocs commands</h3>
 <ul>
 <li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
 <li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
 <li><code>mkdocs build</code> - Build the documentation site.</li>
 <li><code>mkdocs -h</code> - Print help message and exit.</li>
 </ul>
-<h3 id="project-layout">Project layout</h3>
+<h3 id="mkdocs-project-layout">MkDocs project layout</h3>
 <pre><code>mkdocs.yml    # The configuration file.
 docs/
     index.md  # The documentation homepage.
@@ -250,5 +264,5 @@ docs/
 
 <!--
 MkDocs version : 1.1.2
-Build Date UTC : 2021-02-07 13:43:29.042771+00:00
+Build Date UTC : 2021-02-07 15:24:33.647546+00:00
 -->
