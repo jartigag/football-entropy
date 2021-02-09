@@ -9,6 +9,8 @@ from matplotlib.lines import Line2D
 
 def make_visualizations(matches, entropy_means, teams):
 
+    plt.style.use('ggplot')
+
     ## -- Leagues Predictability -- ##
 
     num_seasons = len(matches.season.unique())
@@ -24,10 +26,10 @@ def make_visualizations(matches, entropy_means, teams):
                 arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
     ax.annotate('', xytext=(11.7, 0.96),xy=(11.7, 0.931),
                 arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
-    ax.annotate('less predictable', xy=(11.8, 0.99), annotation_clip=False,fontsize=14,rotation='vertical')
+    ax.annotate('less predictable', xy=(11.8, 0.99), annotation_clip=False,fontsize=14,rotation='vertical', color='grey')
     ax.annotate('more predictable', xy=(11.8, 0.952), annotation_clip=False,fontsize=14,rotation='vertical')
 
-    plt.savefig('reports/figures/leagues_pred.png', bbox_inches='tight',dpi=600)
+    plt.savefig('reports/figures/leagues_pred.png', bbox_inches='tight', dpi=600)
 
     ## -- Teams Predictability -- ##
 
@@ -80,16 +82,16 @@ def make_visualizations(matches, entropy_means, teams):
                 arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
     ax.annotate('', xytext=(11.65, 0.77),xy=(11.65, 0.61),
                 arrowprops=dict(facecolor='black',arrowstyle="->, head_length=.7, head_width=.3",linewidth=1), annotation_clip=False)
-    ax.annotate('less predictable', xy=(11.75, 0.88), annotation_clip=False,fontsize=14,rotation='vertical')
-    ax.annotate('more predictable', xy=(11.75, 0.73), annotation_clip=False,fontsize=14,rotation='vertical')
+    ax.annotate('less predictable', xy=(11.75, 0.88), annotation_clip=False, fontsize=14, rotation='vertical', color='grey')
+    ax.annotate('more predictable', xy=(11.75, 0.73), annotation_clip=False, fontsize=14, rotation='vertical', color='grey')
 
     #add labels
-    ax.annotate('Barcelona', xy=(6.55, 0.634),fontsize=9)
-    ax.annotate('B. Munich', xy=(6.5, 0.655),fontsize=9)
-    ax.annotate('Real Madrid', xy=(6.51, 0.731),fontsize=9)
-    ax.annotate('PSG', xy=(6.93, 0.78),fontsize=9)
+    ax.annotate('Barcelona', xy=(6.55, 0.634), fontsize=9)
+    ax.annotate('B. Munich', xy=(6.5, 0.655), fontsize=9)
+    ax.annotate('Real Madrid', xy=(6.51, 0.731), fontsize=9)
+    ax.annotate('PSG', xy=(6.93, 0.78),  fontsize=9)
 
-    plt.savefig('reports/figures/teams_pred.png', bbox_inches='tight',dpi=600)
+    plt.savefig('reports/figures/teams_pred.png', bbox_inches='tight', dpi=600)
 
 if __name__ == '__main__':
     #load data
