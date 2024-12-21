@@ -6,7 +6,7 @@ This work tries to answer the next question: *How predictable football really is
 I found this post: https://labtwentyone.tumblr.com/post/147894684062/why-did-we-stop-loving-football  
 and I'm just updating the data and restructuring the project.
 
-Quick explanation in docs: https://jartigag.xyz/football-entropy/
+Quick explanation in docs: https://javier.artiga.es/football-entropy/
 
 ## Results
 
